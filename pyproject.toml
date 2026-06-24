@@ -3,7 +3,7 @@ requires = ["hatchling>=1.18"]
 build-backend = "hatchling.build"
 
 [project]
-name = "apiforge"
+name = "apiforge-sdk"
 version = "0.1.0"
 description = "Unified Python interface for multiple APIs with plugin architecture"
 readme = "README.md"
