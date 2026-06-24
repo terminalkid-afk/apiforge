@@ -1,0 +1,136 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "apiforge"
+version = "0.1.0"
+description = "Unified Python interface for multiple APIs with plugin architecture"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+authors = [
+    { name = "APIForge Contributors", email = "maintainers@apiforge.dev" },
+]
+maintainers = [
+    { name = "APIForge Contributors", email = "maintainers@apiforge.dev" },
+]
+keywords = [
+    "api",
+    "integration",
+    "plugins",
+    "sdk",
+    "openapi",
+    "mcp",
+    "github",
+    "discord",
+    "notion",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "pydantic>=2.6.0",
+    "pydantic-settings>=2.2.0",
+    "click>=8.1.7",
+    "rich>=13.7.0",
+    "keyring>=24.3.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.1.0",
+    "respx>=0.21.0",
+]
+dev = [
+    "ruff>=0.3.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/apiforge/apiforge"
+Documentation = "https://github.com/apiforge/apiforge/blob/main/README.md"
+Repository = "https://github.com/apiforge/apiforge"
+Issues = "https://github.com/apiforge/apiforge/issues"
+Changelog = "https://github.com/apiforge/apiforge/releases"
+
+[project.scripts]
+apiforge = "apiforge.cli.main:cli"
+
+[project.entry-points."apiforge.plugins"]
+github = "apiforge.plugins.github:GitHubPlugin"
+discord = "apiforge.plugins.discord:DiscordPlugin"
+notion = "apiforge.plugins.notion:NotionPlugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["apiforge"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "apiforge",
+    "README.md",
+    "LICENSE",
+    "Contributing.md",
+    "ROADMAP.md",
+    "docs",
+    "tests",
+    "pyproject.toml",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = ["build", "dist", ".venv"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W",  # pycodestyle, pyflakes, pycodestyle warnings
+    "I",            # isort
+    "N",            # pep8-naming
+    "UP",           # pyupgrade
+    "B",            # bugbear
+    "C4",           # comprehensions
+    "SIM",          # simplify
+    "PTH",          # use-pathlib
+    "RET",          # return
+    "ASYNC",        # async
+    "S",            # security
+    "RUF",          # ruff-specific
+]
+ignore = [
+    "S101",  # Use of assert detected (fine in tests)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S106"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apiforge"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-ra -q --cov=apiforge --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["apiforge"]
+omit = ["tests/*", "*/__init__.py"]
